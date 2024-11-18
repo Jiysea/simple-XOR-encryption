@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>XOR Cipher</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
+            rel="stylesheet" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            .poppins-regular {
+                font-family: "Poppins", sans-serif;
+                font-weight: 400;
+                font-style: normal;
+            }
+        </style>
+    </head>
+    <body
+        class="flex flex-col items-center justify-center gap-4 min-h-screen bg-[#212121] poppins-regular p-4">
+        <div class="bg-[#2B2B2B] p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h1 class="text-2xl font-medium text-zinc-50 text-center">
+                Encryption Method
+            </h1>
+            <h2 class="text-base font-medium text-zinc-500 text-center">
+                XOR Cipher
+            </h2>
+        </div>
+
+        <!-- Encryption Block -->
+        <div class="bg-[#2B2B2B] p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <span class="flex flex-col gap-4 mb-4">
+                <div class="flex items-center gap-4 w-full text-zinc-50">
+                    <span class="flex flex-col w-full">
+                        <label
+                            for="messageInput"
+                            class="text-sm font-medium mb-1">
+                            Message
+                        </label>
+
+                        <input
+                            type="text"
+                            id="messageInput"
+                            placeholder="Type message"
+                            autocomplete="off"
+                            autocapitalize="on"
+                            class="text-sm rounded-md w-full p-2 outline-none bg-[#383838] placeholder-zinc-500 text-zinc-50 focus:ring-2 focus:ring-zinc-500 duration-200 ease-in-out caret-zinc-500 selection:bg-zinc-300 selection:text-zinc-700" />
+                    </span>
+
+                    <span class="flex flex-col w-full">
+                        <label for="keyIn" class="text-sm font-medium mb-1">
+                            Key Lock
+                        </label>
+                        <input
+                            type="text"
+                            id="keyIn"
+                            placeholder="Type key"
+                            autocomplete="off"
+                            autocapitalize="on"
+                            class="text-sm rounded-md w-full p-2 outline-none bg-[#383838] placeholder-zinc-500 text-zinc-50 focus:ring-2 focus:ring-zinc-500 duration-200 ease-in-out caret-zinc-500 selection:bg-zinc-300 selection:text-zinc-700" />
+                    </span>
+                </div>
+                <button
+                    onclick="bin2hex()"
+                    class="text-sm duration-200 ease-in-out bg-zinc-700 hover:bg-indigo-800 active:bg-indigo-900 text-white rounded-md px-4 py-2 font-medium outline-none">
+                    Encrypt
+                </button>
+            </span>
+        </div>
+
+        <!-- Decryption Block -->
+        <div class="bg-[#2B2B2B] p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <span class="flex flex-col gap-4 mb-4">
+                <div class="flex items-center gap-4 w-full text-zinc-50">
+                    <span class="flex flex-col w-full">
+                        <label
+                            for="cipherInput"
+                            class="text-sm font-medium mb-1">
+                            Cipher
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cipherInput"
+                            placeholder="Type cipher"
+                            autocomplete="off"
+                            autocapitalize="on"
+                            class="text-sm rounded-md w-full p-2 outline-none bg-[#383838] placeholder-zinc-500 text-zinc-50 focus:ring-2 focus:ring-zinc-500 duration-200 ease-in-out caret-zinc-500 selection:bg-zinc-300 selection:text-zinc-700" />
+                    </span>
+
+                    <span class="flex flex-col w-full">
+                        <label for="keyOut" class="text-sm font-medium mb-1">
+                            Unlock Key
+                        </label>
+                        <input
+                            type="text"
+                            id="keyOut"
+                            placeholder="Type key"
+                            autocomplete="off"
+                            autocapitalize="on"
+                            class="text-sm rounded-md w-full p-2 outline-none bg-[#383838] placeholder-zinc-500 text-zinc-50 focus:ring-2 focus:ring-zinc-500 duration-200 ease-in-out caret-zinc-500 selection:bg-zinc-300 selection:text-zinc-700" />
+                    </span>
+                </div>
+                <button
+                    onclick="hex2bin()"
+                    class="text-sm duration-200 ease-in-out bg-zinc-700 hover:bg-indigo-800 active:bg-indigo-900 text-white rounded-md px-4 py-2 font-medium outline-none">
+                    Decrypt
+                </button>
+            </span>
+        </div>
+
+        <div
+            class="bg-[#2B2B2B] p-6 rounded-lg shadow-lg max-w-lg w-full text-center">
+            <span
+                id="output"
+                class="flex whitespace-nowrap text-zinc-50 text-gray-700 text-lg font-medium"
+                >Outputs will show here!</span
+            >
+        </div>
+
+        <script>
+            // XOR each character with the key's character, looping key if it's shorter
+            function encryptDecrypt(text, key) {
+                let result = "";
+                // Converts each character of text into its ASCII code using charCodeAt
+                // Performs the XOR operation (^) between the character’s
+                // ASCII code and the corresponding ASCII code of the key.
+                // If the key is shorter, it wraps around using `i % key.length`
+                for (let i = 0; i < text.length; i++) {
+                    result += String.fromCharCode(
+                        text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                    );
+                }
+                return result;
+            }
+
+            // encrypt a user-provided input and convert the result to a hexadecimal string
+            function bin2hex() {
+                const binary = document.getElementById("messageInput").value;
+                const key = document.getElementById("keyIn").value;
+
+                encrypted = encryptDecrypt(binary, key);
+                hex = encrypted
+                    .split("")
+                    .map((char) =>
+                        char.charCodeAt(0).toString(16).padStart(2, "0")
+                    )
+                    .join("");
+
+                document.getElementById("output").innerText = hex
+                    ? `Result: ${hex}`
+                    : "Please enter something!";
+            }
+
+            // decrypt a user-provided hexadecimal input and return the original plaintext
+            function hex2bin() {
+                const hex = document.getElementById("cipherInput").value;
+                const key = document.getElementById("keyOut").value;
+
+                let binary = "";
+                for (let i = 0; i < hex.length; i += 2) {
+                    binary += String.fromCharCode(
+                        parseInt(hex.substr(i, 2), 16)
+                    );
+                }
+
+                decrypted = encryptDecrypt(binary, key);
+                document.getElementById("output").innerText = decrypted
+                    ? `Result: ${decrypted}`
+                    : "Please enter something!";
+            }
+        </script>
+    </body>
+</html>
